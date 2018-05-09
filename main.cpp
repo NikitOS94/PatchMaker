@@ -7,19 +7,24 @@
 using namespace std;
 using namespace picosha2;
 
-void encryptionDecription(vector<unsigned char> hash, istream_iterator<char> dataIn2Iterator,
+void encryptionDecription(vector<unsigned char> hash, istream_iterator<byte_t> dataIn2Iterator,
                           ostreambuf_iterator<char> outputIterator, bool isSkipSalt);
 
 /*
  * Empty iterator for checkup iterator end
 */
-istream_iterator<char> eof;
+istream_iterator<byte_t> eof;
 
 int
 main(int argc, const char *argv[]) {
 
+    if (argc < 4) {
+        std::cout << "You pass only " << (argc - 1) << " arguments. You should pass 3 paths of files" << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
-    ifstream dataIn1(argv[1], ios::binary);
+    ifstream dataIn1(argv[1], ios::in | ios::binary);
+    dataIn1 >> std::noskipws;
 
     /*
      * Check the existence and accessibility of the first input file
@@ -29,7 +34,8 @@ main(int argc, const char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    ifstream dataIn2(argv[2], ios::binary);
+    ifstream dataIn2(argv[2], ios::in | ios::binary);
+    dataIn2 >> std::noskipws;
 
     /*
      * Check the existence and accessibility of the second input file
@@ -53,7 +59,7 @@ main(int argc, const char *argv[]) {
      * Vector for hash of input file 1
     */
     vector<unsigned char> hashSHA256(k_digest_size);
-    std::istream_iterator<char> dataIn2Iterator(dataIn2);
+    std::istream_iterator<byte_t> dataIn2Iterator(dataIn2);
     ostreambuf_iterator<char> outputIterator(data_out);
 
     /*
@@ -62,13 +68,15 @@ main(int argc, const char *argv[]) {
     */
     hash256(istreambuf_iterator<char>(dataIn1), istreambuf_iterator<char>(), hashSHA256.begin(), hashSHA256.end());
 
-    if (dataIn2Iterator != eof)
-        if (*dataIn2Iterator == 0) //Checkup the first byte for detection patch or text file
+    if (dataIn2Iterator != eof) {
+        if (*dataIn2Iterator == 0) { //Checkup the first byte for detection patch or text file
             encryptionDecription(hashSHA256, ++dataIn2Iterator, outputIterator, true);
-        else {
-            *outputIterator = 0; //Tag for patch file
-            encryptionDecription(hashSHA256, dataIn2Iterator, ++outputIterator, false);
+            return 0;
         }
+    }
+
+    *outputIterator = 0; //Tag for patch file
+    encryptionDecription(hashSHA256, dataIn2Iterator, ++outputIterator, false);
 
     return 0;
 }
@@ -78,16 +86,21 @@ main(int argc, const char *argv[]) {
  * Each letter encrypted by xor logic operation. As a hash has length = 32(256 bites), if encrypted text length is less
  * than 32 or not multiple of 32 function add 0 byte as a bo meaning salt.
  */
-void encryptionDecription(vector<unsigned char> hash, istream_iterator<char> dataIn2Iterator,
+void encryptionDecription(vector<unsigned char> hash, istream_iterator<byte_t> dataIn2Iterator,
                           ostreambuf_iterator<char> outputIterator, bool isSkipSalt) {
-    while (dataIn2Iterator != eof)
+    do {
         for_each(hash.begin(), hash.end(),
                  [&](unsigned char c) {
-                     auto local = (char) (c ^ ((dataIn2Iterator != eof) ? (*dataIn2Iterator++) : (0)));
-                     if (local != 0 || !isSkipSalt) { //skip 0 values if file is text, because 0 is additional salt
-                         cout << local << endl;
-                         *outputIterator = local;
-                         outputIterator++;
-                     }
+                     cout<<(int)*dataIn2Iterator;
+                     auto local = (char) (c ^ ((dataIn2Iterator != eof) ? (*dataIn2Iterator++) : 1));
+                    // cout << local << endl;
+                     if (local != 1 || !isSkipSalt) //skip 0 values if file is text, because 0 is additional salt
+                         *outputIterator++ = local;
                  });
+    } while (dataIn2Iterator != eof);
+
+    if (!isSkipSalt)
+        cout << "Patch successfully created!"<<endl;
+    else
+        cout << "Patch successfully applied!"<<endl;
 }
