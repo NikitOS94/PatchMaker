@@ -58,15 +58,15 @@ main(int argc, const char *argv[]) {
     /*
      * Vector for hash of input file 1
     */
-    vector<unsigned char> hashSHA256(k_digest_size);
+    std::istream_iterator<byte_t> dataIn1Iterator(dataIn1);
     std::istream_iterator<byte_t> dataIn2Iterator(dataIn2);
     ostreambuf_iterator<char> outputIterator(data_out);
 
-    /*
-     * Function from library "picosha2" GitHub: https://github.com/okdshin/PicoSHA2
-     * Function receive file iterator and return vector with hash
-    */
-    hash256(istreambuf_iterator<char>(dataIn1), istreambuf_iterator<char>(), hashSHA256.begin(), hashSHA256.end());
+    bool isPatch = false;
+
+    while(dataIn1Iterator != eof || dataIn2Iterator != eof){
+
+    }
 
     if (dataIn2Iterator != eof) {
         if (*dataIn2Iterator == 0) { //Checkup the first byte for detection patch or text file
@@ -93,7 +93,6 @@ void encryptionDecription(vector<unsigned char> hash, istream_iterator<byte_t> d
                  [&](unsigned char c) {
                      cout<<(int)*dataIn2Iterator;
                      auto local = (char) (c ^ ((dataIn2Iterator != eof) ? (*dataIn2Iterator++) : 1));
-                    // cout << local << endl;
                      if (local != 1 || !isSkipSalt) //skip 0 values if file is text, because 0 is additional salt
                          *outputIterator++ = local;
                  });
