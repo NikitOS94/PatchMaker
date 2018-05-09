@@ -69,13 +69,14 @@ main(int argc, const char *argv[]) {
     hash256(istreambuf_iterator<char>(dataIn1), istreambuf_iterator<char>(), hashSHA256.begin(), hashSHA256.end());
 
     if (dataIn2Iterator != eof) {
-        if (*dataIn2Iterator == 0) { //Checkup the first byte for detection patch or text file
+        if (*dataIn2Iterator == 1) { //Checkup the first byte for detection patch or text file
+            cout<<"qwerty";
             encryptionDecription(hashSHA256, ++dataIn2Iterator, outputIterator, true);
             return 0;
         }
     }
 
-    *outputIterator = 0; //Tag for patch file
+    *outputIterator = 1; //Tag for patch file
     encryptionDecription(hashSHA256, dataIn2Iterator, ++outputIterator, false);
 
     return 0;
