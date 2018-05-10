@@ -7,7 +7,7 @@
 using namespace std;
 using namespace picosha2;
 
-void encryptionDecription(vector<unsigned char> hash, istream_iterator<byte_t> dataIn2Iterator,
+void encryptionDecription(vector<unsigned char> hash, istream_iterator<char> dataIn2Iterator,
                           ostreambuf_iterator<char> outputIterator, bool isSkipSalt);
 
 /*
