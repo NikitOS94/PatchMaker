@@ -19,7 +19,7 @@ Pass to PatchMaker as a parameters three paths to files:
 * Input file2 or patch - file can be empty but should exists
 * Otput file
 
-Eaxmple:
+Example:
     
     $ ./PatchMaker tests/test1/i1.txt tests/test1/patch.txt tests/test1/output.txt
    
@@ -29,3 +29,11 @@ Eaxmple:
 * "Output file FILE_NAME not available!" - prints if you pass as a output file which can't be acceptable.
 * "Patch successfully created!" - patch created.
 * "Patch successfully applied!" - patch applied.
+
+## Launch tests
+To launch test use next command:
+    
+    $ make test
+    
+Now, tests considered 7 groups with 6 tests in each.
+   
