@@ -20,13 +20,13 @@ main(int argc, const char *argv[]) {
     }
 
     ifstream dataIn1(argv[1], ios::in | ios::binary);
-    dataIn1 >> std::noskipws;
+    dataIn1 >> noskipws;
 
     /*
      * Check the existence and accessibility of the first input file
     */
     if (!dataIn1.good()) {
-        std::cout << "Input file " << argv[1] << " does not exist!" << std::endl;
+        cout << "Input file " << argv[1] << " does not exist!" << endl;
         return 1;
     }
 
@@ -37,7 +37,7 @@ main(int argc, const char *argv[]) {
      * Check the existence and accessibility of the second input file
     */
     if (!dataIn2.good()) {
-        std::cout << "Input file " << argv[2] << " does not exist!" << std::endl;
+        cout << "Input file " << argv[2] << " does not exist!" << endl;
         return 1;
     }
 
@@ -47,12 +47,11 @@ main(int argc, const char *argv[]) {
      * Check the accessibility of the output file. If file doesn't exists - create new
     */
     if (!data_out.good()) {
-        std::cout << "Output file " << argv[3] << " not available!" << std::endl;
+        cout << "Output file " << argv[3] << " not available!" << endl;
         return 1;
     }
 
-    std::istream_iterator<char> dataIn1Iterator(dataIn1);
-    std::istream_iterator<char> dataIn2Iterator(dataIn2);
+    istream_iterator<char> dataIn1Iterator(dataIn1), dataIn2Iterator(dataIn2);
     ostreambuf_iterator<char> outputIterator(data_out);
 
     bool isPatch = false;
