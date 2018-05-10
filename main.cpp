@@ -20,7 +20,7 @@ main(int argc, const char *argv[]) {
 
     if (argc < 4) {
         cout << "You pass only " << (argc - 1) << " arguments. You should pass 3 paths of files" << endl;
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     ifstream dataIn1(argv[1], ios::in | ios::binary);
@@ -31,7 +31,7 @@ main(int argc, const char *argv[]) {
     */
     if (!dataIn1.good()) {
         cout << "Input file " << argv[1] << " does not exist!" << endl;
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     ifstream dataIn2(argv[2], ios::in | ios::binary);
@@ -42,7 +42,7 @@ main(int argc, const char *argv[]) {
     */
     if (!dataIn2.good()) {
         cout << "Input file " << argv[2] << " does not exist!" << endl;
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     ofstream data_out(argv[3], ios::out | ios::binary);
@@ -52,7 +52,7 @@ main(int argc, const char *argv[]) {
     */
     if (!data_out.good()) {
         cout << "Output file " << argv[3] << " not available!" << endl;
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     /*
@@ -70,7 +70,6 @@ main(int argc, const char *argv[]) {
 
     if (dataIn2Iterator != eof) {
         if (*dataIn2Iterator == 1) { //Checkup the first byte for detection patch or text file
-            cout<<"qwerty";
             encryptionDecription(hashSHA256, ++dataIn2Iterator, outputIterator, true);
             return 0;
         }
@@ -92,9 +91,7 @@ void encryptionDecription(vector<unsigned char> hash, istream_iterator<char> dat
     do {
         for_each(hash.begin(), hash.end(),
                  [&](unsigned char c) {
-                     cout<<(int)*dataIn2Iterator;
                      auto local = (char) (c ^ ((dataIn2Iterator != eof) ? (*dataIn2Iterator++) : 1));
-                    // cout << local << endl;
                      if (local != 1 || !isSkipSalt) //skip 0 values if file is text, because 0 is additional salt
                          *outputIterator++ = local;
                  });
