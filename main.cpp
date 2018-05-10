@@ -16,7 +16,7 @@ main(int argc, const char *argv[]) {
 
     if (argc < 4) {
         std::cout << "You pass only " << (argc - 1) << " arguments. You should pass 3 paths of files" << std::endl;
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     ifstream dataIn1(argv[1], ios::in | ios::binary);
@@ -27,7 +27,7 @@ main(int argc, const char *argv[]) {
     */
     if (!dataIn1.good()) {
         std::cout << "Input file " << argv[1] << " does not exist!" << std::endl;
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     ifstream dataIn2(argv[2], ios::in | ios::binary);
@@ -38,7 +38,7 @@ main(int argc, const char *argv[]) {
     */
     if (!dataIn2.good()) {
         std::cout << "Input file " << argv[2] << " does not exist!" << std::endl;
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     ofstream data_out(argv[3], ios::out | ios::binary);
@@ -48,7 +48,7 @@ main(int argc, const char *argv[]) {
     */
     if (!data_out.good()) {
         std::cout << "Output file " << argv[3] << " not available!" << std::endl;
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     std::istream_iterator<char> dataIn1Iterator(dataIn1);
