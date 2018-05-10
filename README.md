@@ -29,3 +29,10 @@ Eaxmple:
 * "Output file FILE_NAME not available!" - prints if you pass as a output file which can't be acceptable.
 * "Patch successfully created!" - patch created.
 * "Patch successfully applied!" - patch applied.
+
+## Launch tests
+To launch test use next command:
+    
+    $ make test
+    
+Now, tests considered 7 groups with 6 tests in each.
