@@ -13,35 +13,35 @@ void encryptionDecription(vector<unsigned char> hash, istream_iterator<byte_t> d
 /*
  * Empty iterator for checkup iterator end
 */
-istream_iterator<byte_t> eof;
+istream_iterator<char> eof;
 
 int
 main(int argc, const char *argv[]) {
 
     if (argc < 4) {
-        std::cout << "You pass only " << (argc - 1) << " arguments. You should pass 3 paths of files" << std::endl;
+        cout << "You pass only " << (argc - 1) << " arguments. You should pass 3 paths of files" << endl;
         exit(EXIT_FAILURE);
     }
 
     ifstream dataIn1(argv[1], ios::in | ios::binary);
-    dataIn1 >> std::noskipws;
+    dataIn1 >> noskipws;
 
     /*
      * Check the existence and accessibility of the first input file
     */
     if (!dataIn1.good()) {
-        std::cout << "Input file " << argv[1] << " does not exist!" << std::endl;
+        cout << "Input file " << argv[1] << " does not exist!" << endl;
         exit(EXIT_FAILURE);
     }
 
     ifstream dataIn2(argv[2], ios::in | ios::binary);
-    dataIn2 >> std::noskipws;
+    dataIn2 >> noskipws;
 
     /*
      * Check the existence and accessibility of the second input file
     */
     if (!dataIn2.good()) {
-        std::cout << "Input file " << argv[2] << " does not exist!" << std::endl;
+        cout << "Input file " << argv[2] << " does not exist!" << endl;
         exit(EXIT_FAILURE);
     }
 
@@ -51,7 +51,7 @@ main(int argc, const char *argv[]) {
      * Check the accessibility of the output file. If file doesn't exists - create new
     */
     if (!data_out.good()) {
-        std::cout << "Output file " << argv[3] << " not available!" << std::endl;
+        cout << "Output file " << argv[3] << " not available!" << endl;
         exit(EXIT_FAILURE);
     }
 
@@ -59,7 +59,7 @@ main(int argc, const char *argv[]) {
      * Vector for hash of input file 1
     */
     vector<unsigned char> hashSHA256(k_digest_size);
-    std::istream_iterator<byte_t> dataIn2Iterator(dataIn2);
+    istream_iterator<char> dataIn2Iterator(dataIn2);
     ostreambuf_iterator<char> outputIterator(data_out);
 
     /*
@@ -87,7 +87,7 @@ main(int argc, const char *argv[]) {
  * Each letter encrypted by xor logic operation. As a hash has length = 32(256 bites), if encrypted text length is less
  * than 32 or not multiple of 32 function add 0 byte as a bo meaning salt.
  */
-void encryptionDecription(vector<unsigned char> hash, istream_iterator<byte_t> dataIn2Iterator,
+void encryptionDecription(vector<unsigned char> hash, istream_iterator<char> dataIn2Iterator,
                           ostreambuf_iterator<char> outputIterator, bool isSkipSalt) {
     do {
         for_each(hash.begin(), hash.end(),
